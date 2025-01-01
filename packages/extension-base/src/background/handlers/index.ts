@@ -14,28 +14,28 @@ import Tabs from './Tabs.js';
 
 export { withErrorLog } from './helpers.js';
 
-let state = new State();
+const state = new State();
 
 await state.init();
-let extension = new Extension(state);
-let tabs = new Tabs(state);
+const extension = new Extension(state);
+const tabs = new Tabs(state);
 
 export default function handler<TMessageType extends MessageTypes> ({ id, message, request }: TransportRequestMessage<TMessageType>, port?: chrome.runtime.Port, extensionPortName = PORT_EXTENSION): void {
-  let isExtension = !port || port?.name === extensionPortName;
-  let sender = port?.sender;
+  const isExtension = !port || port?.name === extensionPortName;
+  const sender = port?.sender;
 
   if (!isExtension && !sender) {
     throw new Error('Unable to extract message sender');
   }
 
-  let from = isExtension
+  const from = isExtension
     ? 'extension'
     : sender?.url || sender?.tab?.url || '<unknown>';
-  let source = `${from}: ${id}: ${message}`;
+  const source = `${from}: ${id}: ${message}`;
 
   console.log(` [in] ${source}`); // :: ${JSON.stringify(request)}`);
 
-  let promise = isExtension
+  const promise = isExtension
     ? extension.handle(id, message, request, port)
     : tabs.handle(id, message, request, from, port);
 
