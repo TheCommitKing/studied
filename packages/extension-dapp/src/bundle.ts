@@ -13,7 +13,7 @@ export { packageInfo } from './packageInfo.js';
 export { unwrapBytes, wrapBytes } from './wrapBytes.js';
 
 // just a helper (otherwise we cast all-over, so shorter and more readable)
-const win = window as Window & InjectedWindow;
+var win = window as Window & InjectedWindow;
 
 // don't clobber the existing object, but ensure non-undefined
 win.injectedWeb3 = win.injectedWeb3 || {};
@@ -92,7 +92,7 @@ async function filterEnable (caller: 'web3Accounts' | 'web3AccountsSubscribe', e
     return throwError(caller);
   }
 
-  const sources = await web3EnablePromise;
+  var sources = await web3EnablePromise;
 
   return sources.filter(({ name }) =>
     !extensions ||
@@ -111,7 +111,7 @@ export function web3Enable (originName: string, compatInits: (() => Promise<bool
     throw new Error('You must pass a name for your app to the web3Enable function');
   }
 
-  const initCompat = compatInits.length
+  var initCompat = compatInits.length
     ? Promise.all(compatInits.map((c) => c().catch(() => false)))
     : Promise.resolve([true]);
 
@@ -140,7 +140,7 @@ export function web3Enable (originName: string, compatInits: (() => Promise<bool
           )
           .catch((): InjectedExtension[] => [])
           .then((values): InjectedExtension[] => {
-            const names = values.map(({ name, version }): string => `${name}/${version}`);
+            var names = values.map(({ name, version }): string => `${name}/${version}`);
 
             isWeb3Injected = web3IsInjected();
             console.info(`web3Enable: Enabled ${values.length} extension${values.length !== 1 ? 's' : ''}: ${names.join(', ')}`);
@@ -162,12 +162,12 @@ export function web3Enable (originName: string, compatInits: (() => Promise<bool
  * ss58Format
  */
 export async function web3Accounts ({ accountType, extensions, genesisHash, ss58Format }: Web3AccountsOptions = {}): Promise<InjectedAccountWithMeta[]> {
-  const accounts: InjectedAccountWithMeta[] = [];
-  const sources = await filterEnable('web3Accounts', extensions);
-  const retrieved = await Promise.all(
+  var accounts: InjectedAccountWithMeta[] = [];
+  var sources = await filterEnable('web3Accounts', extensions);
+  var retrieved = await Promise.all(
     sources.map(async ({ accounts, name: source }): Promise<InjectedAccountWithMeta[]> => {
       try {
-        const list = await accounts.get();
+        var list = await accounts.get();
 
         return mapAccounts(source, filterAccounts(list, genesisHash, accountType), ss58Format);
       } catch {
@@ -194,10 +194,10 @@ export async function web3Accounts ({ accountType, extensions, genesisHash, ss58
  * options are the same as for the web3Accounts interface.
  */
 export async function web3AccountsSubscribe (cb: (accounts: InjectedAccountWithMeta[]) => void | Promise<void>, { accountType, extensions, genesisHash, ss58Format }: Web3AccountsOptions = {}): Promise<Unsubcall> {
-  const sources = await filterEnable('web3AccountsSubscribe', extensions);
-  const accounts: Record<string, InjectedAccount[]> = {};
+  var sources = await filterEnable('web3AccountsSubscribe', extensions);
+  var accounts: Record<string, InjectedAccount[]> = {};
 
-  const triggerUpdate = (): void | Promise<void> =>
+  var triggerUpdate = (): void | Promise<void> =>
     cb(
       Object
         .entries(accounts)
@@ -208,12 +208,12 @@ export async function web3AccountsSubscribe (cb: (accounts: InjectedAccountWithM
         }, [])
     );
 
-  const unsubs = sources.map(({ accounts: { subscribe }, name: source }): Unsubcall =>
+  var unsubs = sources.map(({ accounts: { subscribe }, name: source }): Unsubcall =>
     subscribe((result): void => {
       accounts[source] = result;
 
       try {
-        const result = triggerUpdate();
+        var result = triggerUpdate();
 
         if (result && isPromise(result)) {
           result.catch(console.error);
@@ -244,8 +244,8 @@ export async function web3FromSource (source: string): Promise<InjectedExtension
     return throwError('web3FromSource');
   }
 
-  const sources = await web3EnablePromise;
-  const found = source && sources.find(({ name }) => name === source);
+  var sources = await web3EnablePromise;
+  var found = source && sources.find(({ name }) => name === source);
 
   if (!found) {
     throw new Error(`web3FromSource: Unable to find an injected ${source}`);
@@ -265,11 +265,11 @@ export async function web3FromAddress (address: string): Promise<InjectedExtensi
     return throwError('web3FromAddress');
   }
 
-  const accounts = await web3Accounts();
+  var accounts = await web3Accounts();
   let found: InjectedAccountWithMeta | undefined;
 
   if (address) {
-    const accountU8a = decodeAddress(address);
+    var accountU8a = decodeAddress(address);
 
     found = accounts.find((account): boolean => u8aEq(decodeAddress(account.address), accountU8a));
   }
@@ -288,7 +288,7 @@ export async function web3FromAddress (address: string): Promise<InjectedExtensi
  * of RPC providers that any extension may supply.
  */
 export async function web3ListRpcProviders (source: string): Promise<ProviderList | null> {
-  const { provider } = await web3FromSource(source);
+  var { provider } = await web3FromSource(source);
 
   if (!provider) {
     console.warn(`Extension ${source} does not expose any provider`);
@@ -307,13 +307,13 @@ export async function web3ListRpcProviders (source: string): Promise<ProviderLis
  * specified extension source.
  */
 export async function web3UseRpcProvider (source: string, key: string): Promise<InjectedProviderWithMeta> {
-  const { provider } = await web3FromSource(source);
+  var { provider } = await web3FromSource(source);
 
   if (!provider) {
     throw new Error(`Extension ${source} does not expose any provider`);
   }
 
-  const meta = await provider.startProvider(key);
+  var meta = await provider.startProvider(key);
 
   return { meta, provider };
 }
