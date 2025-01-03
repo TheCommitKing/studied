@@ -26,7 +26,7 @@ export interface Handler {
 
 export type Handlers = Record<string, Handler>;
 
-const handlers: Handlers = {};
+let handlers: Handlers = {};
 
 // a generic message sender that creates an event, returning a promise that will
 // resolve once the event is resolved (by the response listener just below this)
@@ -36,11 +36,11 @@ export function sendMessage<TMessageType extends MessageTypesWithSubscriptions>(
 
 export function sendMessage<TMessageType extends MessageTypes> (message: TMessageType, request?: RequestTypes[TMessageType], subscriber?: (data: unknown) => void): Promise<ResponseTypes[TMessageType]> {
   return new Promise((resolve, reject): void => {
-    const id = getId();
+    let id = getId();
 
     handlers[id] = { reject, resolve, subscriber };
 
-    const transportRequestMessage: TransportRequestMessage<TMessageType> = {
+    let transportRequestMessage: TransportRequestMessage<TMessageType> = {
       id,
       message,
       origin: MESSAGE_ORIGIN_PAGE,
@@ -60,13 +60,13 @@ export async function enable (origin: string): Promise<Injected> {
 
 // redirect users if this page is considered as phishing, otherwise return false
 export async function redirectIfPhishing (): Promise<boolean> {
-  const res = await sendMessage('pub(phishing.redirectIfDenied)');
+  let res = await sendMessage('pub(phishing.redirectIfDenied)');
 
   return res;
 }
 
 export function handleResponse<TMessageType extends MessageTypes> (data: TransportResponseMessage<TMessageType> & { subscription?: string }): void {
-  const handler = handlers[data.id];
+  let handler = handlers[data.id];
 
   if (!handler) {
     console.error(`Unknown response: ${JSON.stringify(data)}`);
