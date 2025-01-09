@@ -5,7 +5,7 @@ import type { InjectedAccount, InjectedAccounts, Unsubcall } from '@polkadot/ext
 import type { SendRequest } from './types.js';
 
 // External to class, this.# is not private enough (yet)
-let sendRequest: SendRequest;
+const sendRequest: SendRequest;
 
 export default class Accounts implements InjectedAccounts {
   constructor (_sendRequest: SendRequest) {
@@ -17,7 +17,7 @@ export default class Accounts implements InjectedAccounts {
   }
 
   public subscribe (cb: (accounts: InjectedAccount[]) => unknown): Unsubcall {
-    let id: string | null = null;
+    const id: string | null = null;
 
     sendRequest('pub(accounts.subscribe)', null, cb)
       .then((subId): void => {
