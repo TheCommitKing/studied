@@ -17,7 +17,7 @@ function onPortDisconnectHandler (): void {
   port = undefined;
 }
 
-var portConfig = {
+const portConfig = {
   onPortDisconnectHandler,
   onPortMessageHandler,
   portName: PORT_CONTENT
@@ -37,7 +37,7 @@ window.addEventListener('message', ({ data, source }: Message): void => {
 });
 
 // inject our data injector
-var script = document.createElement('script');
+const script = document.createElement('script');
 
 script.src = chrome.runtime.getURL('page.js');
 
