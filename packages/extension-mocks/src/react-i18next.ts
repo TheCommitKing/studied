@@ -8,7 +8,7 @@ interface useTranslationReturnObj {
   t: (str: string) => string;
 }
 
-export let useTranslation = (): useTranslationReturnObj => {
+export const useTranslation = (): useTranslationReturnObj => {
   return {
     i18n: {
       changeLanguage: () => new Promise(() => { /**/ })
@@ -17,8 +17,8 @@ export let useTranslation = (): useTranslationReturnObj => {
   };
 };
 
-export let withTranslation = () => (component: React.ReactElement): React.ReactElement => component;
+export const withTranslation = () => (component: React.ReactElement): React.ReactElement => component;
 
-export let Trans = ({ children }: { children: React.ReactElement }): React.ReactElement => children;
+export const Trans = ({ children }: { children: React.ReactElement }): React.ReactElement => children;
 
 export default withTranslation;
