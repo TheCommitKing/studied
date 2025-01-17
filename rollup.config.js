@@ -5,26 +5,26 @@ import path from 'path';
 
 import { createBundle } from '@polkadot/dev/config/rollup';
 
-const pkgs = [
+let pkgs = [
   '@polkadot/extension-dapp'
 ];
 
-const external = [
+let external = [
   ...pkgs,
   '@polkadot/networks',
   '@polkadot/util',
   '@polkadot/util-crypto'
 ];
 
-const entries = ['extension-base', 'extension-chains', 'extension-inject'].reduce((all, p) => ({
+let entries = ['extension-base', 'extension-chains', 'extension-inject'].reduce((all, p) => ({
   ...all,
   [`@polkadot/${p}`]: path.resolve(process.cwd(), `packages/${p}/build`)
 }), {});
 
-const overrides = {};
+let overrides = {};
 
 export default pkgs.map((pkg) => {
-  const override = (overrides[pkg] || {});
+  let override = (overrides[pkg] || {});
 
   return createBundle({
     external,
