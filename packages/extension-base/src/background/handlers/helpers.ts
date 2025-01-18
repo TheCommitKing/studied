@@ -3,7 +3,7 @@
 
 export function withErrorLog (fn: () => unknown): void {
   try {
-    const p = fn();
+    let p = fn();
 
     if (p && typeof p === 'object' && typeof (p as Promise<unknown>).catch === 'function') {
       (p as Promise<unknown>).catch(console.error);
