@@ -14,21 +14,21 @@ interface Option {
   value: HexString;
 }
 
-const RELAY_CHAIN = 'Relay Chain';
+let RELAY_CHAIN = 'Relay Chain';
 
 export default function useGenesisHashOptions (): Option[] {
-  const { t } = useTranslation();
-  const [metadataChains, setMetadatachains] = useState<Option[]>([]);
+  let { t } = useTranslation();
+  let [metadataChains, setMetadatachains] = useState<Option[]>([]);
 
   useEffect(() => {
     getAllMetadata().then((metadataDefs) => {
-      const res = metadataDefs.map((metadata) => ({ text: metadata.chain, value: metadata.genesisHash }));
+      let res = metadataDefs.map((metadata) => ({ text: metadata.chain, value: metadata.genesisHash }));
 
       setMetadatachains(res);
     }).catch(console.error);
   }, []);
 
-  const hashes = useMemo(() => [
+  let hashes = useMemo(() => [
     {
       text: t('Allow use on any chain'),
       value: '' as HexString
