@@ -7,7 +7,7 @@ import type { MessageTypesWithSubscriptions, SubscriptionMessageTypes } from '..
 
 type Subscriptions = Record<string, chrome.runtime.Port>;
 
-const subscriptions: Subscriptions = {};
+let subscriptions: Subscriptions = {};
 
 // return a subscription callback, that will send the data to the caller via the port
 export function createSubscription<TMessageType extends MessageTypesWithSubscriptions> (id: string, port: chrome.runtime.Port): (data: SubscriptionMessageTypes[TMessageType]) => void {
