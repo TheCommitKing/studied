@@ -13,21 +13,21 @@ export { packageInfo } from './packageInfo.js';
 // imports chain details, generally metadata. For the generation of these,
 // inside the api, run `yarn chain:info --ws <url>`
 
-let definitions = new Map<string, MetadataDef>(
+const definitions = new Map<string, MetadataDef>(
   // [kusama].map((def) => [def.genesisHash, def])
 );
 
-let expanded = new Map<string, Chain>();
+const expanded = new Map<string, Chain>();
 
 export function metadataExpand (definition: MetadataDef, isPartial = false): Chain {
-  let cached = expanded.get(definition.genesisHash);
+  const cached = expanded.get(definition.genesisHash);
 
   if (cached && cached.specVersion === definition.specVersion) {
     return cached;
   }
 
-  let { chain, genesisHash, icon, metaCalls, specVersion, ss58Format, tokenDecimals, tokenSymbol, types, userExtensions } = definition;
-  let registry = new TypeRegistry();
+  const { chain, genesisHash, icon, metaCalls, specVersion, ss58Format, tokenDecimals, tokenSymbol, types, userExtensions } = definition;
+  const registry = new TypeRegistry();
 
   if (!isPartial) {
     registry.register(types);
@@ -39,15 +39,15 @@ export function metadataExpand (definition: MetadataDef, isPartial = false): Cha
     tokenSymbol
   }) as unknown as ChainProperties);
 
-  let hasMetadata = !!metaCalls && !isPartial;
+  const hasMetadata = !!metaCalls && !isPartial;
 
   if (hasMetadata) {
     registry.setMetadata(new Metadata(registry, base64Decode(metaCalls)), undefined, userExtensions);
   }
 
-  let isUnknown = genesisHash === '0x';
+  const isUnknown = genesisHash === '0x';
 
-  let result = {
+  const result = {
     definition,
     genesisHash: isUnknown
       ? undefined
@@ -71,7 +71,7 @@ export function metadataExpand (definition: MetadataDef, isPartial = false): Cha
 }
 
 export function findChain (definitions: MetadataDef[], genesisHash?: string | null): Chain | null {
-  let def = definitions.find((def) => def.genesisHash === genesisHash);
+  const def = definitions.find((def) => def.genesisHash === genesisHash);
 
   return def
     ? metadataExpand(def)
