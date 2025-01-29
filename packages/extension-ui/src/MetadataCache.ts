@@ -3,7 +3,7 @@
 
 import type { MetadataDef } from '@polkadot/extension-inject/types';
 
-const metadataGets = new Map<string, Promise<MetadataDef | null>>();
+let metadataGets = new Map<string, Promise<MetadataDef | null>>();
 
 export function getSavedMeta (genesisHash: string): Promise<MetadataDef | null> | undefined {
   return metadataGets.get(genesisHash);
