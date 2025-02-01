@@ -5,8 +5,8 @@
 
 type StoreValue = Record<string, unknown>;
 
-var lastError = (type: string): void => {
-  var error = chrome.runtime.lastError;
+const lastError = (type: string): void => {
+  const error = chrome.runtime.lastError;
 
   if (error) {
     console.error(`BaseStore.${type}:: runtime.lastError:`, error);
@@ -22,9 +22,9 @@ export default abstract class BaseStore <T> {
 
   public async all (update: (key: string, value: T) => void): Promise<void> {
     await this.allMap(async (map): Promise<void> => {
-      var entries = Object.entries(map);
+      const entries = Object.entries(map);
 
-      for (var [key, value] of entries) {
+      for (const [key, value] of entries) {
         // eslint-disable-next-line @typescript-eslint/await-thenable
         await update(key, value);
       }
@@ -35,11 +35,11 @@ export default abstract class BaseStore <T> {
     await chrome.storage.local.get(null).then(async (result: StoreValue) => {
       lastError('all');
 
-      var entries = Object.entries(result);
-      var map: Record<string, T> = {};
+      const entries = Object.entries(result);
+      const map: Record<string, T> = {};
 
       for (let i = 0, count = entries.length; i < count; i++) {
-        var [key, value] = entries[i];
+        const [key, value] = entries[i];
 
         if (key.startsWith(this.#prefix)) {
           map[key.replace(this.#prefix, '')] = value as T;
@@ -53,7 +53,7 @@ export default abstract class BaseStore <T> {
   }
 
   public async get (key: string, update: (value: T) => void): Promise<void> {
-    var prefixedKey = `${this.#prefix}${key}`;
+    const prefixedKey = `${this.#prefix}${key}`;
 
     await chrome.storage.local.get([prefixedKey]).then(async (result: StoreValue) => {
       lastError('get');
@@ -66,7 +66,7 @@ export default abstract class BaseStore <T> {
   }
 
   public async remove (key: string, update?: () => void): Promise<void> {
-    var prefixedKey = `${this.#prefix}${key}`;
+    const prefixedKey = `${this.#prefix}${key}`;
 
     await chrome.storage.local.remove(prefixedKey).then(async () => {
       lastError('remove');
@@ -79,7 +79,7 @@ export default abstract class BaseStore <T> {
   }
 
   public async set (key: string, value: T, update?: () => void): Promise<void> {
-    var prefixedKey = `${this.#prefix}${key}`;
+    const prefixedKey = `${this.#prefix}${key}`;
 
     await chrome.storage.local.set({ [prefixedKey]: value }).then(async () => {
       lastError('set');
