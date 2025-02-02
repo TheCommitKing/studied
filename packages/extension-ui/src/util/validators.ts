@@ -9,7 +9,7 @@ export type ResultType<T> = { error: InputError } | { ok: T };
 
 export declare type Validator<T> = (value: T) => ResultType<T> | Promise<ResultType<T>>;
 
-export let Result = {
+export const Result = {
   error: <T>(errorDescription: string): ResultType<T> => ({ error: { errorDescription } }),
   isError<T> (value: ResultType<T>): value is ({ error: InputError }) {
     return Object.hasOwnProperty.call(value, 'error');
@@ -22,8 +22,8 @@ export let Result = {
 
 export function allOf <T> (...validators: Validator<T>[]): Validator<T> {
   return async (value: T): Promise<ResultType<T>> => {
-    for (let validator of validators) {
-      let validationResult = await validator(value);
+    for (const validator of validators) {
+      const validationResult = await validator(value);
 
       if (Result.isError(validationResult)) {
         return validationResult;
