@@ -55,7 +55,7 @@ export default class Tabs {
   }
 
   private filterForAuthorizedAccounts (accounts: InjectedAccount[], url: string): InjectedAccount[] {
-    const auth = this.#state.authUrls[this.#state.stripUrl(url)];
+    let auth = this.#state.authUrls[this.#state.stripUrl(url)];
 
     if (!auth) {
       return [];
@@ -76,17 +76,17 @@ export default class Tabs {
   }
 
   private accountsListAuthorized (url: string, { anyType }: RequestAccountList): InjectedAccount[] {
-    const transformedAccounts = transformAccounts(accountsObservable.subject.getValue(), anyType);
+    let transformedAccounts = transformAccounts(accountsObservable.subject.getValue(), anyType);
 
     return this.filterForAuthorizedAccounts(transformedAccounts, url);
   }
 
   private accountsSubscribeAuthorized (url: string, id: string, port: chrome.runtime.Port): string {
-    const cb = createSubscription<'pub(accounts.subscribe)'>(id, port);
+    let cb = createSubscription<'pub(accounts.subscribe)'>(id, port);
 
-    const strippedUrl = this.#state.stripUrl(url);
+    let strippedUrl = this.#state.stripUrl(url);
 
-    const authUrlObservable = this.#state.authUrlSubjects[strippedUrl]?.asObservable();
+    let authUrlObservable = this.#state.authUrlSubjects[strippedUrl]?.asObservable();
 
     if (!authUrlObservable) {
       console.error(`No authUrlSubject found for ${strippedUrl}`);
@@ -96,7 +96,7 @@ export default class Tabs {
 
     this.#accountSubs[id] = {
       subscription: combineLatest([accountsObservable.subject, authUrlObservable]).subscribe(([accounts, _authUrlInfo]: [SubjectInfo, AuthUrlInfo]): void => {
-        const transformedAccounts = transformAccounts(accounts);
+        let transformedAccounts = transformAccounts(accounts);
 
         cb(this.filterForAuthorizedAccounts(transformedAccounts, url));
       }),
@@ -111,7 +111,7 @@ export default class Tabs {
   }
 
   private accountsUnsubscribe (url: string, { id }: RequestAccountUnsubscribe): boolean {
-    const sub = this.#accountSubs[id];
+    let sub = this.#accountSubs[id];
 
     if (!sub || sub.url !== url) {
       return false;
@@ -126,7 +126,7 @@ export default class Tabs {
   }
 
   private getSigningPair (address: string): KeyringPair {
-    const pair = keyring.getPair(address);
+    let pair = keyring.getPair(address);
 
     assert(pair, 'Unable to find keypair');
 
@@ -134,15 +134,15 @@ export default class Tabs {
   }
 
   private bytesSign (url: string, request: SignerPayloadRaw): Promise<ResponseSigning> {
-    const address = request.address;
-    const pair = this.getSigningPair(address);
+    let address = request.address;
+    let pair = this.getSigningPair(address);
 
     return this.#state.sign(url, new RequestBytesSign(request), { address, ...pair.meta });
   }
 
   private extrinsicSign (url: string, request: SignerPayloadJSON): Promise<ResponseSigning> {
-    const address = request.address;
-    const pair = this.getSigningPair(address);
+    let address = request.address;
+    let pair = this.getSigningPair(address);
 
     return this.#state.sign(url, new RequestExtrinsicSign(request), { address, ...pair.meta });
   }
@@ -171,9 +171,9 @@ export default class Tabs {
   }
 
   private async rpcSubscribe (request: RequestRpcSubscribe, id: string, port: chrome.runtime.Port): Promise<boolean> {
-    const innerCb = createSubscription<'pub(rpc.subscribe)'>(id, port);
-    const cb = (_error: Error | null, data: SubscriptionMessageTypes['pub(rpc.subscribe)']): void => innerCb(data);
-    const subscriptionId = await this.#state.rpcSubscribe(request, cb, port);
+    let innerCb = createSubscription<'pub(rpc.subscribe)'>(id, port);
+    let cb = (_error: Error | null, data: SubscriptionMessageTypes['pub(rpc.subscribe)']): void => innerCb(data);
+    let subscriptionId = await this.#state.rpcSubscribe(request, cb, port);
 
     port.onDisconnect.addListener((): void => {
       unsubscribe(id);
@@ -184,8 +184,8 @@ export default class Tabs {
   }
 
   private rpcSubscribeConnected (request: null, id: string, port: chrome.runtime.Port): Promise<boolean> {
-    const innerCb = createSubscription<'pub(rpc.subscribeConnected)'>(id, port);
-    const cb = (_error: Error | null, data: SubscriptionMessageTypes['pub(rpc.subscribeConnected)']): void => innerCb(data);
+    let innerCb = createSubscription<'pub(rpc.subscribeConnected)'>(id, port);
+    let cb = (_error: Error | null, data: SubscriptionMessageTypes['pub(rpc.subscribeConnected)']): void => innerCb(data);
 
     this.#state.rpcSubscribeConnected(request, cb, port);
 
@@ -201,9 +201,9 @@ export default class Tabs {
   }
 
   private redirectPhishingLanding (phishingWebsite: string): void {
-    const nonFragment = phishingWebsite.split('#')[0];
-    const encodedWebsite = encodeURIComponent(nonFragment);
-    const url = `${chrome.runtime.getURL('index.html')}#${PHISHING_PAGE_REDIRECT}/${encodedWebsite}`;
+    let nonFragment = phishingWebsite.split('#')[0];
+    let encodedWebsite = encodeURIComponent(nonFragment);
+    let url = `${chrome.runtime.getURL('index.html')}#${PHISHING_PAGE_REDIRECT}/${encodedWebsite}`;
 
     chrome.tabs.query({ url: nonFragment }, (tabs) => {
       tabs
@@ -216,7 +216,7 @@ export default class Tabs {
   }
 
   private async redirectIfPhishing (url: string): Promise<boolean> {
-    const isInDenyList = await checkIfDenied(url);
+    let isInDenyList = await checkIfDenied(url);
 
     if (isInDenyList) {
       this.redirectPhishingLanding(url);
