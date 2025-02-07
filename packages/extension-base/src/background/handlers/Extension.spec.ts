@@ -26,8 +26,8 @@ describe('Extension', () => {
   let extension: Extension;
   let state: State;
   let tabs: Tabs;
-  var suri = 'seed sock milk update focus rotate barely fade car face mechanic mercy';
-  var password = 'passw0rd';
+  const suri = 'seed sock milk update focus rotate barely fade car face mechanic mercy';
+  const password = 'passw0rd';
 
   async function createExtension (): Promise<Extension> {
     try {
@@ -47,7 +47,7 @@ describe('Extension', () => {
     }
   }
 
-  var createAccount = async (type?: KeypairType): Promise<string> => {
+  const createAccount = async (type?: KeypairType): Promise<string> => {
     await extension.handle('id', 'pri(accounts.create.suri)', type && type === 'ethereum'
       ? {
         name: 'parent',
@@ -60,7 +60,7 @@ describe('Extension', () => {
         password,
         suri
       }, {} as chrome.runtime.Port);
-    var { address } = await extension.handle('id', 'pri(seed.validate)', type && type === 'ethereum'
+    const { address } = await extension.handle('id', 'pri(seed.validate)', type && type === 'ethereum'
       ? {
         suri,
         type
@@ -77,8 +77,8 @@ describe('Extension', () => {
   });
 
   it('exports account from keyring', async () => {
-    var { pair: { address } } = keyring.addUri(suri, password);
-    var result = await extension.handle('id', 'pri(accounts.export)', {
+    const { pair: { address } } = keyring.addUri(suri, password);
+    const result = await extension.handle('id', 'pri(accounts.export)', {
       address,
       password
     }, {} as chrome.runtime.Port);
@@ -95,7 +95,7 @@ describe('Extension', () => {
     });
 
     it('pri(derivation.validate) passes for valid suri', async () => {
-      var result = await extension.handle('id', 'pri(derivation.validate)', {
+      const result = await extension.handle('id', 'pri(derivation.validate)', {
         parentAddress: address,
         parentPassword: password,
         suri: '//path'
@@ -154,8 +154,8 @@ describe('Extension', () => {
     });
 
     it('pri(accounts.changePassword) changes account password', async () => {
-      var newPass = 'pa55word';
-      var wrongPass = 'ZZzzZZzz';
+      const newPass = 'pa55word';
+      const wrongPass = 'ZZzzZZzz';
 
       await expect(extension.handle('id', 'pri(accounts.changePassword)', {
         address,
@@ -163,7 +163,7 @@ describe('Extension', () => {
         oldPass: wrongPass
       }, {} as chrome.runtime.Port)).rejects.toThrow(/oldPass is invalid/);
 
-      var res = await extension.handle('id', 'pri(accounts.changePassword)', {
+      const res = await extension.handle('id', 'pri(accounts.changePassword)', {
         address,
         newPass,
         oldPass: password
@@ -171,7 +171,7 @@ describe('Extension', () => {
 
       expect(res).toEqual(true);
 
-      var pair = keyring.getPair(address);
+      const pair = keyring.getPair(address);
 
       expect(pair.decodePkcs8(newPass)).toEqual(undefined);
 
@@ -205,11 +205,11 @@ describe('Extension', () => {
     });
 
     it('signs with default signed extensions', async () => {
-      var registry = new TypeRegistry();
+      const registry = new TypeRegistry();
 
       registry.setSignedExtensions(payload.signedExtensions);
 
-      var signatureExpected = registry
+      const signatureExpected = registry
         .createType('ExtrinsicPayload', payload, { version: payload.version }).sign(pair);
 
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -219,7 +219,7 @@ describe('Extension', () => {
           expect((result as ResponseSigning)?.signature).toEqual(signatureExpected.signature);
         }).catch((err) => console.log(err));
 
-      var res = await extension.handle('1615192072290.7', 'pri(signing.approve.password)', {
+      const res = await extension.handle('1615192072290.7', 'pri(signing.approve.password)', {
         id: state.allSignRequests[0].id,
         password,
         savePass: false
@@ -229,11 +229,11 @@ describe('Extension', () => {
     });
 
     it('signs with default signed extensions - ethereum', async () => {
-      var ethAddress = await createAccount('ethereum');
-      var ethPair = keyring.getPair(ethAddress);
+      const ethAddress = await createAccount('ethereum');
+      const ethPair = keyring.getPair(ethAddress);
 
       ethPair.decodePkcs8(password);
-      var ethPayload: SignerPayloadJSON = {
+      const ethPayload: SignerPayloadJSON = {
         address: ethAddress,
         blockHash: '0xf9fc354edc3ff49f43d5e2c14e3c609a0c4ba469ed091edf893d672993dc9bc0',
         blockNumber: '0x00000393',
@@ -255,11 +255,11 @@ describe('Extension', () => {
         transactionVersion: '0x00000002',
         version: 4
       };
-      var registry = new TypeRegistry();
+      const registry = new TypeRegistry();
 
       registry.setSignedExtensions(payload.signedExtensions);
 
-      var signatureExpected = registry
+      const signatureExpected = registry
         .createType('ExtrinsicPayload', ethPayload, { version: ethPayload.version }).sign(ethPair);
 
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -269,7 +269,7 @@ describe('Extension', () => {
           expect((result as ResponseSigning)?.signature).toEqual(signatureExpected.signature);
         }).catch((err) => console.log(err));
 
-      var res = await extension.handle('1615192072290.7', 'pri(signing.approve.password)', {
+      const res = await extension.handle('1615192072290.7', 'pri(signing.approve.password)', {
         id: state.allSignRequests[0].id,
         password,
         savePass: false
@@ -279,9 +279,9 @@ describe('Extension', () => {
     });
 
     it('signs with user extensions, known types', async () => {
-      var types = {} as unknown as Record<string, string>;
+      const types = {} as unknown as Record<string, string>;
 
-      var userExtensions = {
+      const userExtensions = {
         MyUserExtension: {
           extrinsic: {
             assetId: 'AssetId'
@@ -290,7 +290,7 @@ describe('Extension', () => {
         }
       } as unknown as ExtDef;
 
-      var meta: MetadataDef = {
+      const meta: MetadataDef = {
         chain: 'Development',
         color: '#191a2e',
         genesisHash: '0x242a54b35e1aad38f37b884eddeb71f6f9931b02fac27bf52dfb62ef754e5e62',
@@ -305,7 +305,7 @@ describe('Extension', () => {
 
       await state.saveMetadata(meta);
 
-      var payload: SignerPayloadJSON = {
+      const payload: SignerPayloadJSON = {
         address,
         blockHash: '0xe1b1dda72998846487e4d858909d4f9a6bbd6e338e4588e5d809de16b1317b80',
         blockNumber: '0x00000393',
@@ -320,12 +320,12 @@ describe('Extension', () => {
         version: 4
       };
 
-      var registry = new TypeRegistry();
+      const registry = new TypeRegistry();
 
       registry.setSignedExtensions(payload.signedExtensions, userExtensions);
       registry.register(types);
 
-      var signatureExpected = registry
+      const signatureExpected = registry
         .createType('ExtrinsicPayload', payload, { version: payload.version }).sign(pair);
 
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -335,7 +335,7 @@ describe('Extension', () => {
           expect((result as ResponseSigning)?.signature).toEqual(signatureExpected.signature);
         }).catch((err) => console.log(err));
 
-      var res = await extension.handle('1615192062290.7', 'pri(signing.approve.password)', {
+      const res = await extension.handle('1615192062290.7', 'pri(signing.approve.password)', {
         id: state.allSignRequests[0].id,
         password,
         savePass: false
@@ -345,7 +345,7 @@ describe('Extension', () => {
     });
 
     it('override default signed extension', async () => {
-      var types = {
+      const types = {
         FeeExchangeV1: {
           assetId: 'Compact<AssetId>',
           maxPayment: 'Compact<Balance>'
@@ -356,7 +356,7 @@ describe('Extension', () => {
         }
       } as unknown as Record<string, string>;
 
-      var userExtensions = {
+      const userExtensions = {
         ChargeTransactionPayment: {
           extrinsic: {
             transactionPayment: 'PaymentOptions'
@@ -365,7 +365,7 @@ describe('Extension', () => {
         }
       } as unknown as ExtDef;
 
-      var meta: MetadataDef = {
+      const meta: MetadataDef = {
         chain: 'Development',
         color: '#191a2e',
         genesisHash: '0x242a54b35e1aad38f37b884eddeb71f6f9931b02fac27bf52dfb62ef754e5e62',
@@ -380,12 +380,12 @@ describe('Extension', () => {
 
       await state.saveMetadata(meta);
 
-      var registry = new TypeRegistry();
+      const registry = new TypeRegistry();
 
       registry.setSignedExtensions(payload.signedExtensions, userExtensions);
       registry.register(types);
 
-      var signatureExpected = registry
+      const signatureExpected = registry
         .createType('ExtrinsicPayload', payload, { version: payload.version }).sign(pair);
 
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -395,7 +395,7 @@ describe('Extension', () => {
           expect((result as ResponseSigning)?.signature).toEqual(signatureExpected.signature);
         }).catch((err) => console.log(err));
 
-      var res = await extension.handle('1615192062290.7', 'pri(signing.approve.password)', {
+      const res = await extension.handle('1615192062290.7', 'pri(signing.approve.password)', {
         id: state.allSignRequests[0].id,
         password,
         savePass: false
@@ -405,14 +405,14 @@ describe('Extension', () => {
     });
 
     it('signs with user extensions, additional types', async () => {
-      var types = {
+      const types = {
         myCustomType: {
           feeExchange: 'Compact<AssetId>',
           tip: 'Compact<Balance>'
         }
       } as unknown as Record<string, string>;
 
-      var userExtensions = {
+      const userExtensions = {
         MyUserExtension: {
           extrinsic: {
             myCustomType: 'myCustomType'
@@ -421,7 +421,7 @@ describe('Extension', () => {
         }
       } as unknown as ExtDef;
 
-      var meta: MetadataDef = {
+      const meta: MetadataDef = {
         chain: 'Development',
         color: '#191a2e',
         genesisHash: '0x242a54b35e1aad38f37b884eddeb71f6f9931b02fac27bf52dfb62ef754e5e62',
@@ -436,7 +436,7 @@ describe('Extension', () => {
 
       await state.saveMetadata(meta);
 
-      var payload = {
+      const payload = {
         address,
         blockHash: '0xe1b1dda72998846487e4d858909d4f9a6bbd6e338e4588e5d809de16b1317b80',
         blockNumber: '0x00000393',
@@ -451,12 +451,12 @@ describe('Extension', () => {
         version: 4
       } as unknown as SignerPayloadJSON;
 
-      var registry = new TypeRegistry();
+      const registry = new TypeRegistry();
 
       registry.setSignedExtensions(payload.signedExtensions, userExtensions);
       registry.register(types);
 
-      var signatureExpected = registry
+      const signatureExpected = registry
         .createType('ExtrinsicPayload', payload, { version: payload.version }).sign(pair);
 
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -466,7 +466,7 @@ describe('Extension', () => {
           expect((result as ResponseSigning)?.signature).toEqual(signatureExpected.signature);
         }).catch((err) => console.log(err));
 
-      var res = await extension.handle('1615192062290.7', 'pri(signing.approve.password)', {
+      const res = await extension.handle('1615192062290.7', 'pri(signing.approve.password)', {
         id: state.allSignRequests[0].id,
         password,
         savePass: false
