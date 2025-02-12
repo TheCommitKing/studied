@@ -3,10 +3,10 @@
 
 export declare type Theme = 'light' | 'dark';
 
-export let themes = ['light', 'dark'] as let;
+export const themes = ['light', 'dark'] as const;
 
 export function chooseTheme (): Theme {
-  let preferredTheme = localStorage.getItem('theme');
+  const preferredTheme = localStorage.getItem('theme');
 
   if (preferredTheme) {
     return preferredTheme === 'dark'
