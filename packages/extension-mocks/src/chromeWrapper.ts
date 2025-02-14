@@ -8,7 +8,7 @@ namespace ChromeWrapper {
   export interface IAction {
     setBadgeText: (content: object) => Promise<void>;
   }
-  export const action: IAction = {
+  export let action: IAction = {
     setBadgeText: (_: object) => {
       return new Promise<void>((resolve, _reject) => {
         resolve();
@@ -16,7 +16,7 @@ namespace ChromeWrapper {
     }
   };
 }
-const extendedSinonChrome = {
+let extendedSinonChrome = {
   ...sinonChrome,
   action: ChromeWrapper.action
 };
