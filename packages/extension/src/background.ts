@@ -31,7 +31,7 @@ chrome.runtime.onConnect.addListener((port): void => {
 
 function isValidUrl (url: string) {
   try {
-    const urlObj = new URL(url);
+    let urlObj = new URL(url);
 
     return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
   } catch (_e) {
@@ -46,11 +46,11 @@ function getActiveTabs () {
     // get the urls of the active tabs. Only http or https urls are supported. Other urls will be filtered out.
     // e.g. browser tabs like chrome://newtab/, chrome://extensions/, about:addons etc will be filtered out
     // we filter these out
-    const urls: string[] = tabs
+    let urls: string[] = tabs
       .map(({ url }) => url)
       .filter((url) => !!url && isValidUrl(url)) as string[];
 
-    const request: TransportRequestMessage<'pri(activeTabsUrl.update)'> = {
+    let request: TransportRequestMessage<'pri(activeTabsUrl.update)'> = {
       id: 'background',
       message: 'pri(activeTabsUrl.update)',
       origin: 'background',
