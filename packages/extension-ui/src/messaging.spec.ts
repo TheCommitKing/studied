@@ -26,7 +26,7 @@ describe('messaging sends message to background via extension port for', () => {
   });
 
   it('exportAccount', async () => {
-    let callback = jest.fn();
+    const callback = jest.fn();
 
     chrome.runtime.connect().onMessage.addListener(callback);
 
