@@ -39,7 +39,7 @@ function getNetwork (genesisHash: string): Network | undefined {
 }
 
 function getState (): StateBase {
-  const isLedgerCapable = !!(window as unknown as { USB?: unknown }).USB;
+  var isLedgerCapable = !!(window as unknown as { USB?: unknown }).USB;
 
   return {
     isLedgerCapable,
@@ -50,13 +50,13 @@ function getState (): StateBase {
 function retrieveLedger (genesis: string): LedgerGeneric | Ledger {
   let ledger: LedgerGeneric | Ledger | null = null;
 
-  const currApp = settings.get().ledgerApp;
+  var currApp = settings.get().ledgerApp;
 
-  const { isLedgerCapable } = getState();
+  var { isLedgerCapable } = getState();
 
   assert(isLedgerCapable, 'Incompatible browser, only Chrome is supported');
 
-  const def = getNetwork(genesis);
+  var def = getNetwork(genesis);
 
   assert(def, 'There is no known Ledger app available for this chain');
 
@@ -83,23 +83,23 @@ function retrieveLedger (genesis: string): LedgerGeneric | Ledger {
 }
 
 export default function useLedger (genesis?: string | null, accountIndex = 0, addressOffset = 0): State {
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLocked, setIsLocked] = useState(false);
-  const [refreshLock, setRefreshLock] = useState(false);
-  const [warning, setWarning] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [address, setAddress] = useState<string | null>(null);
-  const { t } = useTranslation();
+  var [isLoading, setIsLoading] = useState(false);
+  var [isLocked, setIsLocked] = useState(false);
+  var [refreshLock, setRefreshLock] = useState(false);
+  var [warning, setWarning] = useState<string | null>(null);
+  var [error, setError] = useState<string | null>(null);
+  var [address, setAddress] = useState<string | null>(null);
+  var { t } = useTranslation();
 
-  const handleGetAddressError = (e: Error, genesis: string) => {
+  var handleGetAddressError = (e: Error, genesis: string) => {
     setIsLoading(false);
-    const { network } = getNetwork(genesis) || { network: 'unknown network' };
+    var { network } = getNetwork(genesis) || { network: 'unknown network' };
 
-    const warningMessage = e.message.includes('Code: 26628')
+    var warningMessage = e.message.includes('Code: 26628')
       ? t('Is your ledger locked?')
       : null;
 
-    const errorMessage = e.message.includes('App does not seem to be open')
+    var errorMessage = e.message.includes('App does not seem to be open')
       ? t('App "{{network}}" does not seem to be open', { replace: { network } })
       : e.message;
 
@@ -113,7 +113,7 @@ export default function useLedger (genesis?: string | null, accountIndex = 0, ad
     setAddress(null);
   };
 
-  const ledger = useMemo(() => {
+  var ledger = useMemo(() => {
     setError(null);
     setIsLocked(false);
     setRefreshLock(false);
@@ -150,12 +150,12 @@ export default function useLedger (genesis?: string | null, accountIndex = 0, ad
     // This is used with a genesisHash only when importing the Ledger account
     // and when signing with Ledger. In both cases, the genesisHash is known and
     // will be in this array.
-    const chosenNetwork = chains.find(({ genesisHash }) => genesisHash === genesis as HexString);
+    var chosenNetwork = chains.find(({ genesisHash }) => genesisHash === genesis as HexString);
 
     // Just in case, but this shouldn't be triggered
     assert(chosenNetwork, t('This network is not available, please report an issue to update the known chains'));
 
-    const currApp = settings.get().ledgerApp;
+    var currApp = settings.get().ledgerApp;
 
     if (currApp === 'generic' || currApp === 'migration') {
       (ledger as LedgerGeneric).getAddress(chosenNetwork.ss58Format, false, accountIndex, addressOffset)
@@ -179,7 +179,7 @@ export default function useLedger (genesis?: string | null, accountIndex = 0, ad
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountIndex, addressOffset, genesis, ledger]);
 
-  const refresh = useCallback(() => {
+  var refresh = useCallback(() => {
     setRefreshLock(true);
     setError(null);
     setWarning(null);
