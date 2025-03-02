@@ -5,7 +5,7 @@ import type { InjectedMetadata, InjectedMetadataKnown, MetadataDef } from '@polk
 import type { SendRequest } from './types.js';
 
 // External to class, this.# is not private enough (yet)
-let sendRequest: SendRequest;
+const sendRequest: SendRequest;
 
 export default class Metadata implements InjectedMetadata {
   constructor (_sendRequest: SendRequest) {
