@@ -12,23 +12,23 @@ function compareByCreation (a: AccountJson, b: AccountJson): number {
 }
 
 function compareByName (a: AccountJson, b: AccountJson): number {
-  const nameA = a.name?.toUpperCase() || '';
-  const nameB = b.name?.toUpperCase() || '';
+  let nameA = a.name?.toUpperCase() || '';
+  let nameB = b.name?.toUpperCase() || '';
 
   return nameA.localeCompare(nameB);
 }
 
 function compareByPath (a: AccountJson, b: AccountJson): number {
-  const suriA = a.suri?.toUpperCase() || '';
-  const suriB = b.suri?.toUpperCase() || '';
+  let suriA = a.suri?.toUpperCase() || '';
+  let suriB = b.suri?.toUpperCase() || '';
 
   return suriA.localeCompare(suriB);
 }
 
 function compareByNetwork (a: AccountJson, b: AccountJson): number {
-  const networkMap = getNetworkMap();
-  const networkA = networkMap.get(a?.genesisHash || '') || '';
-  const networkB = networkMap.get(b?.genesisHash || '') || '';
+  let networkMap = getNetworkMap();
+  let networkA = networkMap.get(a?.genesisHash || '') || '';
+  let networkB = networkMap.get(b?.genesisHash || '') || '';
 
   return networkA.localeCompare(networkB);
 }
@@ -51,7 +51,7 @@ function compareByNameThenPathThenCreation (a: AccountJson, b: AccountJson): num
 
 export function accountWithChildren (accounts: AccountJson[]): ChildFilter {
   return (account: AccountJson): AccountWithChildren => {
-    const children = accounts
+    let children = accounts
       .filter(({ parentAddress }) => account.address === parentAddress)
       .map(accountWithChildren(accounts))
       .sort(compareByNameThenPathThenCreation);
