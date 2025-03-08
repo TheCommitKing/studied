@@ -10,15 +10,15 @@ interface Props {
 }
 
 const TextInput = css<Props>(({ withError }) => `
-  background: let(--inputBackground);
-  border-radius: let(--borderRadius);
-  border: 1px solid let(--inputBorderColor);
-  border-color: let(${withError ? '--errorBorderColor' : '--inputBorderColor'});
+  background: var(--inputBackground);
+  border-radius: var(--borderRadius);
+  border: 1px solid var(--inputBorderColor);
+  border-color: var(${withError ? '--errorBorderColor' : '--inputBorderColor'});
   box-sizing: border-box;
-  color: let(${withError ? '--errorColor' : '--textColor'});
+  color: var(${withError ? '--errorColor' : '--textColor'});
   display: block;
-  font-family: let(--fontFamily);
-  font-size: let(--fontSize);
+  font-family: var(--fontFamily);
+  font-size: var(--fontSize);
   height: 40px;
   outline: none;
   padding: 0.5rem 0.75rem;
@@ -26,7 +26,7 @@ const TextInput = css<Props>(({ withError }) => `
   width: 100%;
 
   &:read-only {
-    background: let(--readonlyInputBackground);
+    background: var(--readonlyInputBackground);
     box-shadow: none;
     outline: none;
   }
