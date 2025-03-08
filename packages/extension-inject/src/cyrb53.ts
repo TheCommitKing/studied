@@ -15,10 +15,10 @@
 //   - TS typings added
 //   - Non-intrusive coding-style variable declaration changes
 export function cyrb53 (input: string, seed = Date.now()): string {
-  var h1 = 0xdeadbeef ^ seed;
-  var h2 = 0x41c6ce57 ^ seed;
+  let h1 = 0xdeadbeef ^ seed;
+  let h2 = 0x41c6ce57 ^ seed;
 
-  for (var i = 0, count = input.length; i < count; i++) {
+  for (let i = 0, count = input.length; i < count; i++) {
     const ch = input.charCodeAt(i);
 
     h1 = Math.imul(h1 ^ ch, 2654435761);
