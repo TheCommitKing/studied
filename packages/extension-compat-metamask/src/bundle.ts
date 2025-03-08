@@ -52,20 +52,20 @@ function injectMetaMaskWeb3 (win: Web3Window): void {
   // decorate the compat interface
   win.injectedWeb3['Web3Source'] = {
     enable: async (): Promise<Injected> => {
-      const providerRaw = await detectEthereumProvider({ mustBeMetaMask: true });
-      const provider = isMetaMaskProvider(providerRaw);
+      let providerRaw = await detectEthereumProvider({ mustBeMetaMask: true });
+      let provider = isMetaMaskProvider(providerRaw);
 
       await provider.request({ method: 'eth_requestAccounts' });
 
       return {
         accounts: {
           get: async (): Promise<InjectedAccount[]> => {
-            const response = (await provider.request({ method: 'eth_requestAccounts' })) as string[];
+            let response = (await provider.request({ method: 'eth_requestAccounts' })) as string[];
 
             return transformAccounts(response);
           },
           subscribe: (cb: (accounts: InjectedAccount[]) => void): (() => void) => {
-            const sub = provider.on('accountsChanged', (accounts): void => {
+            let sub = provider.on('accountsChanged', (accounts): void => {
               cb(transformAccounts(accounts as string[]));
             });
             // TODO: add onchainchanged
@@ -77,7 +77,7 @@ function injectMetaMaskWeb3 (win: Web3Window): void {
         },
         signer: {
           signRaw: async (raw: SignerPayloadRaw): Promise<SignerResult> => {
-            const signature = (await provider.request({ method: 'eth_sign', params: [raw.address, Web3.utils.sha3(raw.data)] })) as HexString;
+            let signature = (await provider.request({ method: 'eth_sign', params: [raw.address, Web3.utils.sha3(raw.data)] })) as HexString;
 
             return { id: 0, signature };
           }
@@ -90,7 +90,7 @@ function injectMetaMaskWeb3 (win: Web3Window): void {
 
 export default function initMetaMask (): Promise<boolean> {
   return new Promise((resolve): void => {
-    const win = window as Window & Web3Window;
+    let win = window as Window & Web3Window;
 
     if (win.ethereum) {
       injectMetaMaskWeb3(win);
