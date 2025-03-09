@@ -3,7 +3,7 @@
 
 import { EXTENSION_PREFIX } from '../defaults.js';
 
-const counter = 0;
+let counter = 0;
 
 export function getId (): string {
   return `${EXTENSION_PREFIX}.${Date.now()}.${++counter}`;
