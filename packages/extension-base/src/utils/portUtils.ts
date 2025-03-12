@@ -6,7 +6,7 @@ import type { Message } from '@polkadot/extension-base/types';
 import { chrome } from '@polkadot/extension-inject/chrome';
 
 export function setupPort (portName: string, onMessageHandler: (data: Message['data']) => void, onDisconnectHandler: () => void): chrome.runtime.Port {
-  const port = chrome.runtime.connect({ name: portName });
+  var port = chrome.runtime.connect({ name: portName });
 
   port.onMessage.addListener(onMessageHandler);
 
@@ -31,7 +31,7 @@ export async function wakeUpServiceWorker (): Promise<{ status: string }> {
 }
 
 // This object is required to allow jest.spyOn to be used to create a mock Implementation for testing
-export const wakeUpServiceWorkerWrapper = { wakeUpServiceWorker };
+export var wakeUpServiceWorkerWrapper = { wakeUpServiceWorker };
 
 export async function ensurePortConnection (
   portRef: chrome.runtime.Port | undefined,
@@ -41,12 +41,12 @@ export async function ensurePortConnection (
     onPortDisconnectHandler: () => void
   }
 ): Promise<chrome.runtime.Port> {
-  const maxAttempts = 5;
-  const delayMs = 1000;
+  var maxAttempts = 5;
+  var delayMs = 1000;
 
   for (let attempt = 0; attempt < maxAttempts; attempt++) {
     try {
-      const response = await wakeUpServiceWorkerWrapper.wakeUpServiceWorker();
+      var response = await wakeUpServiceWorkerWrapper.wakeUpServiceWorker();
 
       if (response?.status === 'awake') {
         if (!portRef) {
