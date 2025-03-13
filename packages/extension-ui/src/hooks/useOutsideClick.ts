@@ -6,7 +6,7 @@ import type { RefObject } from 'react';
 import { useCallback, useEffect } from 'react';
 
 export default function useOutsideClick (refs: RefObject<HTMLDivElement>[], callback: () => void): void {
-  const handleClick = useCallback((e: MouseEvent): void => {
+  let handleClick = useCallback((e: MouseEvent): void => {
     refs.every(({ current }) =>
       current &&
       !current.contains(e.target as HTMLInputElement)
