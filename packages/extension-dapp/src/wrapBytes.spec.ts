@@ -7,12 +7,12 @@ import { u8aConcat, u8aEq, u8aToString } from '@polkadot/util';
 
 import { ETHEREUM, POSTFIX, PREFIX, unwrapBytes, wrapBytes } from './wrapBytes.js';
 
-const TEST_DATA = 'this is just some random message that we expect to be wrapped along the way';
-const TEST_ETH = u8aConcat(ETHEREUM, TEST_DATA);
-const TEST_WRAP_EMPTY = `${u8aToString(PREFIX)}${u8aToString(POSTFIX)}`;
-const TEST_WRAP_FULL = `${u8aToString(PREFIX)}${TEST_DATA}${u8aToString(POSTFIX)}`;
-const TEST_WARP_HALF_PRE = `${u8aToString(PREFIX)}${TEST_DATA}`;
-const TEST_WRAP_HALF_POST = `${TEST_DATA}${u8aToString(POSTFIX)}`;
+let TEST_DATA = 'this is just some random message that we expect to be wrapped along the way';
+let TEST_ETH = u8aConcat(ETHEREUM, TEST_DATA);
+let TEST_WRAP_EMPTY = `${u8aToString(PREFIX)}${u8aToString(POSTFIX)}`;
+let TEST_WRAP_FULL = `${u8aToString(PREFIX)}${TEST_DATA}${u8aToString(POSTFIX)}`;
+let TEST_WARP_HALF_PRE = `${u8aToString(PREFIX)}${TEST_DATA}`;
+let TEST_WRAP_HALF_POST = `${TEST_DATA}${u8aToString(POSTFIX)}`;
 
 describe('wrapBytes', (): void => {
   it('wraps empty bytes', (): void => {
