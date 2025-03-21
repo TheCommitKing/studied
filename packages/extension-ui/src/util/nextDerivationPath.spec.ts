@@ -6,7 +6,7 @@ import type * as _ from '@polkadot/dev-test/globals.d.ts';
 import { nextDerivationPath } from './nextDerivationPath.js';
 
 describe('Generate Derivation Path', () => {
-  let acc = (address: string, parentAddress?: string): {
+  const acc = (address: string, parentAddress?: string): {
     address: string;
     parentAddress?: string;
   } => ({
