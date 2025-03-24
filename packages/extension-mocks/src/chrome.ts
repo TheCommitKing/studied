@@ -24,14 +24,14 @@ class MessagingFake {
   }
 }
 
-const messagingFake = new MessagingFake();
+let messagingFake = new MessagingFake();
 
 chrome.runtime.connect.returns(messagingFake);
 
 chrome.storage.local.get.returns(
   new Promise<Record<string, any>>((resolve, reject) => {
     try {
-      const result = {
+      let result = {
         authUrls: JSON.stringify({
           'localhost:3000': {
             authorizedAccounts: ['5FbSap4BsWfjyRhCchoVdZHkDnmDm3NEgLZ25mesq4aw2WvX'],
