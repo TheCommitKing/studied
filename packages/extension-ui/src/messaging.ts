@@ -31,12 +31,12 @@ interface Handler {
 
 type Handlers = Record<string, Handler>;
 
-var handlers: Handlers = {};
+const handlers: Handlers = {};
 
 let port: chrome.runtime.Port | undefined;
 
 function onPortMessageHandler (data: Message['data']): void {
-  var handler = handlers[data.id];
+  const handler = handlers[data.id];
 
   if (!handler) {
     console.error(`Unknown response: ${JSON.stringify(data)}`);
@@ -62,7 +62,7 @@ function onPortDisconnectHandler (): void {
   port = undefined;
 }
 
-var portConfig = {
+const portConfig = {
   onPortDisconnectHandler,
   onPortMessageHandler,
   portName: PORT_EXTENSION
@@ -73,7 +73,7 @@ function sendMessage<TMessageType extends MessageTypesWithNoSubscriptions>(messa
 function sendMessage<TMessageType extends MessageTypesWithSubscriptions>(message: TMessageType, request: RequestTypes[TMessageType], subscriber: (data: SubscriptionMessageTypes[TMessageType]) => void): Promise<ResponseTypes[TMessageType]>;
 function sendMessage<TMessageType extends MessageTypes> (message: TMessageType, request?: RequestTypes[TMessageType], subscriber?: (data: unknown) => void): Promise<ResponseTypes[TMessageType]> {
   return new Promise((resolve, reject): void => {
-    var id = getId();
+    const id = getId();
 
     handlers[id] = { reject, resolve, subscriber };
 
@@ -171,12 +171,12 @@ export async function getMetadata (genesisHash?: string | null, isPartial = fals
     setSavedMeta(genesisHash, request);
   }
 
-  var def = await request;
+  const def = await request;
 
   if (def) {
     return metadataExpand(def, isPartial);
   } else if (isPartial) {
-    var chain = allChains.find((chain) => chain.genesisHash === genesisHash);
+    const chain = allChains.find((chain) => chain.genesisHash === genesisHash);
 
     if (chain) {
       return metadataExpand({
