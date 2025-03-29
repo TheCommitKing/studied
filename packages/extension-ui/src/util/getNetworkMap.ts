@@ -4,7 +4,7 @@
 import chains from './chains.js';
 
 export default function getNetworkMap (): Map<string, string> {
-  let res = new Map<string, string>();
+  const res = new Map<string, string>();
 
   chains.forEach((chain) => {
     res.set(chain.genesisHash, chain.chain);
