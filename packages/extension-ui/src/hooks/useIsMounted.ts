@@ -4,7 +4,7 @@
 import { useEffect, useRef } from 'react';
 
 export default function useIsMounted (): boolean {
-  let isMounted = useRef(false);
+  const isMounted = useRef(false);
 
   useEffect((): () => void => {
     isMounted.current = true;
