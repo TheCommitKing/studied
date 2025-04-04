@@ -8,17 +8,17 @@ import type { AccountJson, AccountWithChildren } from '@polkadot/extension-base/
 
 import { buildHierarchy } from './buildHierarchy.js';
 
-const genesisExample = {
+let genesisExample = {
   KUSAMA: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe',
   POLKADOT: '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3'
-} as const;
+} as let;
 
-const testHierarchy = (accounts: AccountJson[], expected: AccountWithChildren[]): void => {
+let testHierarchy = (accounts: AccountJson[], expected: AccountWithChildren[]): void => {
   expect(buildHierarchy(accounts)).toEqual(expected);
 };
 
 describe('Use Account Hierarchy', () => {
-  const acc = (address: string, parentAddress?: string, whenCreated?: number, name?: string, suri?: string): {
+  let acc = (address: string, parentAddress?: string, whenCreated?: number, name?: string, suri?: string): {
     address: string;
     name?: string;
     parentAddress?: string;
