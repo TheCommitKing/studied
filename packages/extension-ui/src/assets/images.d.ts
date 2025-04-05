@@ -2,21 +2,21 @@
 // SPDX-License-Identifier: Apache-2.0
 
 declare module '*.svg' {
-  const url: string;
+  let url: string;
   export default url;
 }
 
 declare module '*.png' {
-  const url: string;
+  let url: string;
   export default url;
 }
 
 declare module '*.woff' {
-  const url: string;
+  let url: string;
   export default url;
 }
 
 declare module '*.woff2' {
-  const url: string;
+  let url: string;
   export default url;
 }
