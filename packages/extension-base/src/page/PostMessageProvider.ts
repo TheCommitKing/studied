@@ -10,7 +10,7 @@ import { EventEmitter } from 'eventemitter3';
 
 import { isUndefined, logger } from '@polkadot/util';
 
-var l = logger('PostMessageProvider');
+const l = logger('PostMessageProvider');
 
 type CallbackHandler = (error?: null | Error, value?: unknown) => void;
 
@@ -115,9 +115,9 @@ export default class PostMessageProvider implements InjectedProvider {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public async send (method: string, params: unknown[], _?: boolean, subscription?: SubscriptionHandler): Promise<any> {
     if (subscription) {
-      var { callback, type } = subscription;
+      const { callback, type } = subscription;
 
-      var id = await sendRequest('pub(rpc.subscribe)', { method, params, type }, (res): void => {
+      const id = await sendRequest('pub(rpc.subscribe)', { method, params, type }, (res): void => {
         subscription.callback(null, res);
       });
 
@@ -137,7 +137,7 @@ export default class PostMessageProvider implements InjectedProvider {
     this.#isConnected = false;
     this.#eventemitter.emit('disconnected');
 
-    var meta = await sendRequest('pub(rpc.startProvider)', key);
+    const meta = await sendRequest('pub(rpc.startProvider)', key);
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
     sendRequest('pub(rpc.subscribeConnected)', null, (connected) => {
@@ -163,7 +163,7 @@ export default class PostMessageProvider implements InjectedProvider {
    * @summary Allows unsubscribing to subscriptions made with [[subscribe]].
    */
   public async unsubscribe (type: string, method: string, id: number): Promise<boolean> {
-    var subscription = `${type}::${id}`;
+    const subscription = `${type}::${id}`;
 
     // FIXME This now could happen with re-subscriptions. The issue is that with a re-sub
     // the assigned id now does not match what the API user originally received. It has
