@@ -3,4 +3,4 @@
 
 import { extractGlobal, xglobal } from '@polkadot/x-global';
 
-export let chrome = extractGlobal('chrome', xglobal.browser);
+export const chrome = extractGlobal('chrome', xglobal.browser);
