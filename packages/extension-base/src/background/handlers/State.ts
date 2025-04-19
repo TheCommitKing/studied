@@ -59,9 +59,9 @@ interface SignRequest extends Resolver<ResponseSigning> {
   url: string;
 }
 
-var NOTIFICATION_URL = chrome.runtime.getURL('notification.html');
+const NOTIFICATION_URL = chrome.runtime.getURL('notification.html');
 
-var POPUP_WINDOW_OPTS: chrome.windows.CreateData = {
+const POPUP_WINDOW_OPTS: chrome.windows.CreateData = {
   focused: true,
   height: 621,
   left: 150,
@@ -71,7 +71,7 @@ var POPUP_WINDOW_OPTS: chrome.windows.CreateData = {
   width: 560
 };
 
-var NORMAL_WINDOW_OPTS: chrome.windows.CreateData = {
+const NORMAL_WINDOW_OPTS: chrome.windows.CreateData = {
   focused: true,
   type: 'normal',
   url: NOTIFICATION_URL
@@ -83,23 +83,23 @@ export enum NotificationOptions {
   PopUp,
 }
 
-var AUTH_URLS_KEY = 'authUrls';
-var DEFAULT_AUTH_ACCOUNTS = 'defaultAuthAccounts';
+const AUTH_URLS_KEY = 'authUrls';
+const DEFAULT_AUTH_ACCOUNTS = 'defaultAuthAccounts';
 
 async function extractMetadata (store: MetadataStore): Promise<void> {
   await store.allMap(async (map): Promise<void> => {
-    var knownEntries = Object.entries(knownGenesis);
-    var defs: Record<string, { def: MetadataDef, index: number, key: string }> = {};
-    var removals: string[] = [];
+    const knownEntries = Object.entries(knownGenesis);
+    const defs: Record<string, { def: MetadataDef, index: number, key: string }> = {};
+    const removals: string[] = [];
 
     Object
       .entries(map)
       .forEach(([key, def]): void => {
-        var entry = knownEntries.find(([, hashes]) => hashes.includes(def.genesisHash));
+        const entry = knownEntries.find(([, hashes]) => hashes.includes(def.genesisHash));
 
         if (entry) {
-          var [name, hashes] = entry;
-          var index = hashes.indexOf(def.genesisHash);
+          const [name, hashes] = entry;
+          const index = hashes.indexOf(def.genesisHash);
 
           // flatten the known metadata based on the genesis index
           // (lower is better/newer)
@@ -117,7 +117,7 @@ async function extractMetadata (store: MetadataStore): Promise<void> {
         }
       });
 
-    for (var key of removals) {
+    for (const key of removals) {
       await store.remove(key);
     }
 
@@ -165,9 +165,9 @@ export default class State {
   public async init () {
     await extractMetadata(this.#metaStore);
     // retrieve previously set authorizations
-    var storageAuthUrls: Record<string, string> = await chrome.storage.local.get(AUTH_URLS_KEY);
-    var authString = storageAuthUrls?.[AUTH_URLS_KEY] || '{}';
-    var previousAuth = JSON.parse(authString) as AuthUrls;
+    const storageAuthUrls: Record<string, string> = await chrome.storage.local.get(AUTH_URLS_KEY);
+    const authString = storageAuthUrls?.[AUTH_URLS_KEY] || '{}';
+    const previousAuth = JSON.parse(authString) as AuthUrls;
 
     this.#authUrls = previousAuth;
 
@@ -177,9 +177,9 @@ export default class State {
     });
 
     // retrieve previously set default auth accounts
-    var storageDefaultAuthAccounts: Record<string, string> = await chrome.storage.local.get(DEFAULT_AUTH_ACCOUNTS);
-    var defaultAuthString: string = storageDefaultAuthAccounts?.[DEFAULT_AUTH_ACCOUNTS] || '[]';
-    var previousDefaultAuth = JSON.parse(defaultAuthString) as string[];
+    const storageDefaultAuthAccounts: Record<string, string> = await chrome.storage.local.get(DEFAULT_AUTH_ACCOUNTS);
+    const defaultAuthString: string = storageDefaultAuthAccounts?.[DEFAULT_AUTH_ACCOUNTS] || '[]';
+    const previousDefaultAuth = JSON.parse(defaultAuthString) as string[];
 
     this.defaultAuthAccountSelection = previousDefaultAuth;
   }
@@ -243,12 +243,12 @@ export default class State {
   }
 
   private authComplete = (id: string, resolve: (resValue: AuthResponse) => void, reject: (error: Error) => void): Resolver<AuthResponse> => {
-    var complete = async (authorizedAccounts: string[] = []) => {
-      var { idStr, request: { origin }, url } = this.#authRequests[id];
+    const complete = async (authorizedAccounts: string[] = []) => {
+      const { idStr, request: { origin }, url } = this.#authRequests[id];
 
-      var strippedUrl = this.stripUrl(url);
+      const strippedUrl = this.stripUrl(url);
 
-      var authInfo: AuthUrlInfo = {
+      const authInfo: AuthUrlInfo = {
         authorizedAccounts,
         count: 0,
         id: idStr,
@@ -298,7 +298,7 @@ export default class State {
   }
 
   public updateCurrentTabsUrl (urls: string[]) {
-    var connectedTabs = urls.map((url) => {
+    const connectedTabs = urls.map((url) => {
       let strippedUrl = '';
 
       // the assert in stripUrl may throw for new tabs with "chrome://newtab/"
@@ -341,7 +341,7 @@ export default class State {
   }
 
   private metaComplete = (id: string, resolve: (result: boolean) => void, reject: (error: Error) => void): Resolver<boolean> => {
-    var complete = (): void => {
+    const complete = (): void => {
       delete this.#metaRequests[id];
       this.updateIconMeta(true);
     };
@@ -359,7 +359,7 @@ export default class State {
   };
 
   private signComplete = (id: string, resolve: (result: ResponseSigning) => void, reject: (error: Error) => void): Resolver<ResponseSigning> => {
-    var complete = (): void => {
+    const complete = (): void => {
       delete this.#signRequests[id];
       this.updateIconSign(true);
     };
@@ -379,16 +379,16 @@ export default class State {
   public stripUrl (url: string): string {
     assert(url && (url.startsWith('http:') || url.startsWith('https:') || url.startsWith('ipfs:') || url.startsWith('ipns:')), `Invalid url ${url}, expected to start with http: or https: or ipfs: or ipns:`);
 
-    var parts = url.split('/');
+    const parts = url.split('/');
 
     return parts[2];
   }
 
   private updateIcon (shouldClose?: boolean): void {
-    var authCount = this.numAuthRequests;
-    var metaCount = this.numMetaRequests;
-    var signCount = this.numSignRequests;
-    var text = (
+    const authCount = this.numAuthRequests;
+    const metaCount = this.numMetaRequests;
+    const signCount = this.numSignRequests;
+    const text = (
       authCount
         ? 'Auth'
         : metaCount
@@ -404,7 +404,7 @@ export default class State {
   }
 
   public async removeAuthorization (url: string): Promise<AuthUrls> {
-    var entry = this.#authUrls[url];
+    const entry = this.#authUrls[url];
 
     assert(entry, `The source ${url} is not known`);
 
@@ -444,10 +444,10 @@ export default class State {
   }
 
   public async authorizeUrl (url: string, request: RequestAuthorizeTab): Promise<AuthResponse> {
-    var idStr = this.stripUrl(url);
+    const idStr = this.stripUrl(url);
 
     // Do not enqueue duplicate authorization requests.
-    var isDuplicate = Object
+    const isDuplicate = Object
       .values(this.#authRequests)
       .some((request) => request.idStr === idStr);
 
@@ -464,7 +464,7 @@ export default class State {
     }
 
     return new Promise((resolve, reject): void => {
-      var id = getId();
+      const id = getId();
 
       this.#authRequests[id] = {
         ...this.authComplete(id, resolve, reject),
@@ -480,7 +480,7 @@ export default class State {
   }
 
   public ensureUrlAuthorized (url: string): boolean {
-    var entry = this.#authUrls[this.stripUrl(url)];
+    const entry = this.#authUrls[this.stripUrl(url)];
 
     assert(entry, `The source ${url} has not been enabled yet`);
 
@@ -489,7 +489,7 @@ export default class State {
 
   public injectMetadata (url: string, request: MetadataDef): Promise<boolean> {
     return new Promise((resolve, reject): void => {
-      var id = getId();
+      const id = getId();
 
       this.#metaRequests[id] = {
         ...this.metaComplete(id, resolve, reject),
@@ -525,7 +525,7 @@ export default class State {
   }
 
   public rpcSend (request: RequestRpcSend, port: chrome.runtime.Port): Promise<JsonRpcResponse<unknown>> {
-    var provider = this.#injectedProviders.get(port);
+    const provider = this.#injectedProviders.get(port);
 
     assert(provider, 'Cannot call pub(rpc.subscribe) before provider is set');
 
@@ -545,7 +545,7 @@ export default class State {
 
     // Close provider connection when page is closed
     port.onDisconnect.addListener((): void => {
-      var provider = this.#injectedProviders.get(port);
+      const provider = this.#injectedProviders.get(port);
 
       if (provider) {
         withErrorLog(() => provider.disconnect());
@@ -558,7 +558,7 @@ export default class State {
   }
 
   public rpcSubscribe ({ method, params, type }: RequestRpcSubscribe, cb: ProviderInterfaceCallback, port: chrome.runtime.Port): Promise<number | string> {
-    var provider = this.#injectedProviders.get(port);
+    const provider = this.#injectedProviders.get(port);
 
     assert(provider, 'Cannot call pub(rpc.subscribe) before provider is set');
 
@@ -566,7 +566,7 @@ export default class State {
   }
 
   public rpcSubscribeConnected (_request: null, cb: ProviderInterfaceCallback, port: chrome.runtime.Port): void {
-    var provider = this.#injectedProviders.get(port);
+    const provider = this.#injectedProviders.get(port);
 
     assert(provider, 'Cannot call pub(rpc.subscribeConnected) before provider is set');
 
@@ -576,7 +576,7 @@ export default class State {
   }
 
   public rpcUnsubscribe (request: RequestRpcUnsubscribe, port: chrome.runtime.Port): Promise<boolean> {
-    var provider = this.#injectedProviders.get(port);
+    const provider = this.#injectedProviders.get(port);
 
     assert(provider, 'Cannot call pub(rpc.unsubscribe) before provider is set');
 
@@ -596,7 +596,7 @@ export default class State {
   }
 
   public sign (url: string, request: RequestSign, account: AccountJson): Promise<ResponseSigning> {
-    var id = getId();
+    const id = getId();
 
     return new Promise((resolve, reject): void => {
       this.#signRequests[id] = {
