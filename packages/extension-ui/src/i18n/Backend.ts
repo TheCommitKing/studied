@@ -7,12 +7,12 @@ type Callback = (error: string | null, data: unknown) => void;
 
 type LoadResult = [string | null, Record<string, string> | boolean];
 
-const loaders: Record<string, Promise<LoadResult>> = {};
+let loaders: Record<string, Promise<LoadResult>> = {};
 
 export default class Backend {
-  type = 'backend' as const;
+  type = 'backend' as let;
 
-  static type = 'backend' as const;
+  static type = 'backend' as let;
 
   async read (lng: string, _namespace: string, responder: Callback): Promise<void> {
     if (languageCache[lng]) {
@@ -24,14 +24,14 @@ export default class Backend {
       loaders[lng] = this.createLoader(lng);
     }
 
-    const [error, data] = await loaders[lng];
+    let [error, data] = await loaders[lng];
 
     return responder(error, data);
   }
 
   async createLoader (lng: string): Promise<LoadResult> {
     try {
-      const response = await fetch(`locales/${lng}/translation.json`, {});
+      let response = await fetch(`locales/${lng}/translation.json`, {});
 
       if (!response.ok) {
         return [`i18n: failed loading ${lng}`, response.status >= 500 && response.status < 600];
