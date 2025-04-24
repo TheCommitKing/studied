@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Polkadot-js extension, manage accounts for substrate based chains</title>
+    <meta
+      name="description"
+      content="This browser extension for Polkadot, Kusama or any other substrate-base blockchain allows to keep all your accounts in one place while being able to interact with any website or application that support it."
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta property="og:title" content="Polkadot-js extension, manage accounts for substrate based chains" />
+    <meta property="og:url" content="https://polkadot-js.github.io/extension" />
+    <meta property="og:image" content="./logo.jpg" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:description"
+      content="This browser extension for Polkadot, Kusama or any other substrate-base blockchain allows to keep all your accounts in one place while being able to interact with any website or application that support it."
+    />
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="style.css">
+   
+  </head>
+  <body>
+    <!-- Notification Banner -->
+    <div class="notification__banner">
+      <img src="assets/logo.svg" />
+      Polkadot.JS extension has been re-branded to the Polkadot Developer Signer
+    </div>
+
+    <!-- Main Section -->
+    <main id="main">
+      <!-- Header -->
+      <header class="header__wrapper">
+        <img alt="Logo" src="assets/header_logo.svg" />
+      </header>
+
+      <!-- Hero Section -->
+      <div class="hero__wrapper">
+        <div class="hero__left">
+          <div class="hero__info">
+            <div class="hero__infoDetails">
+              <div class="badge">This extensions is made for developers</div>
+              <h2>Polkadot Developer Signer</h2>
+              <p>
+                The Polkadot Developer Signer allows only for account creation
+                and allows the signing of transactions.
+              </p>
+            </div>
+
+            <div class="hero__cta">
+              <a
+                target="_blank"
+                href="https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd"
+              >
+                <img alt="Chrome" src="assets/chrome.svg" />
+                Download for Chrome
+              </a>
+              <a
+                target="_blank"
+                href="https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/"
+              >
+                <img alt="Chrome" src="assets/firefox.svg" />
+                Download for Firefox
+              </a>
+            </div>
+          </div>
+
+          <div class="hero__moreInfo">
+            <h4>More Info</h4>
+            <p>
+              This extension is open source and the code is available on
+              <a
+                target="_blank"
+                href="https://github.com/polkadot-js/extension"
+              >
+                GitHub</a
+              >.
+            </p>
+            <p>
+              For developers wanting to use the accounts from the extension in a
+              Dapp, head to the developer
+              <a target="_blank" href="https://polkadot.js.org/docs/extension/">
+                documentation</a
+              >.
+            </p>
+          </div>
+        </div>
+        <div class="hero__right">
+          <img alt="Polkadot Developer Signer" src="assets/hero.svg" />
+        </div>
+      </div>
+    </main>
+
+    <script>
+      if (window.self !== window.top) {
+        window.top.location.href = window.location.href;
+      }
+    </script>
+  </body>
+</html>

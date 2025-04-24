@@ -1,0 +1,22 @@
+name: PR
+on: [pull_request]
+
+jobs:
+  pr:
+    continue-on-error: true
+    strategy:
+      matrix:
+        step: ['lint', 'test', 'build', diff]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+    - name: Set Execute Permissions
+      run: chmod +x ./scripts/*
+    - name: ${{ matrix.step }}
+      run: |
+        corepack enable
+        yarn install --immutable
+        yarn ${{ matrix.step }}
